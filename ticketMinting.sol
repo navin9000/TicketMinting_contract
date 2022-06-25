@@ -12,15 +12,14 @@ contract TicketMint is ERC721{
     address payable owner;
     uint public tickets;
     uint public ticketPrice;
-    mapping(address => uint) private _balances;
     uint public count;
     uint startTime;
 
     //creating modifier onlyFans
-    modifier onlyFans(address to){
+    modifier onlyFans{
         require(block.timestamp < startTime,"time completed to mint the ticket");
         require(msg.sender != owner,"u cant mint tickets");
-        require(to != address(0),"cant be minted to zero addresses");
+        require(msg.sender != address(0),"cant be minted to zero addresses");
         require(count < tickets,"tickets completed");
         require(msg.value == 50 wei,"ticket price is 50 wei");
         _;
@@ -33,8 +32,8 @@ contract TicketMint is ERC721{
         startTime = block.timestamp +(((_noOfDays*24)*60)*60);
     }
 
-    function Buy(address to)public payable onlyFans(to){
-        _safeMint(to,count,"");
+    function Buy()public payable onlyFans{
+        _safeMint(msg.sender,count,"");
         count+=1;
     }
 
